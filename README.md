@@ -1,4 +1,4 @@
-# rOS Modern Cloud ERP Prototype
+# rOS Modern Cloud ERP Infrastructure
 
 <img border="0" src="https://github.com/vadimprogsource/rOS/blob/main/ros.png">
 
