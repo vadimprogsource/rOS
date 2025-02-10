@@ -1,6 +1,6 @@
 # rOS Modern Cloud ERP Prototype
 
-<img border="0" src="https://github.com/vadimprogsource/Oql.OData/blob/master/infrastructure.jpg">
+<img border="0" src="https://github.com/vadimprogsource/rOS/blob/master/ros.png">
 
 
 Instruction:
