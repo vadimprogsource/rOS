@@ -7,8 +7,6 @@ namespace rOS.Crm.Api.Objects;
 public interface IServicedObject : ITitled , IEntity
 {
 
-    ICustomerCase Customer { get; }
-
     IAddress Address { get; }
     string   PhoneNumbers { get; }
     decimal  AreaSquare { get; }

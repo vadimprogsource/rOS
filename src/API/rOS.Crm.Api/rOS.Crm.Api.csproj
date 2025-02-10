@@ -8,5 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\rOS.Core.Api\rOS.Core.Api.csproj" />
+    <ProjectReference Include="..\rOS.eCommerce.Api\rOS.eCommerce.Api.csproj" />
   </ItemGroup>
 </Project>
