@@ -1,4 +1,4 @@
-# rOS Modern Clound ERP Prototype
+# rOS Modern Cloud ERP Prototype
 
 <img border="0" src="https://github.com/vadimprogsource/Oql.OData/blob/master/infrastructure.jpg">
 
