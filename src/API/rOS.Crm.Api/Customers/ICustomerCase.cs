@@ -7,6 +7,7 @@ using rOS.Crm.Api.Objects;
 using rOS.Crm.Api.Projects;
 using rOS.Crm.Api.Tasks;
 using rOS.eCommerce.Api.Ordering;
+using rOS.eCommerce.Api.Payments;
 
 namespace rOS.Crm.Api.Customers;
 
@@ -55,11 +56,15 @@ public interface ICustomerCase : IBusinessEntity
 
 
     IReadOnlyCollection<ICustomerContact> Contacts { get; }
+    IReadOnlyCollection<ICustomerRelation> Relations  { get; }
+
     IReadOnlyCollection<IServicedObject> ServicedObjects { get; }
-    IReadOnlyCollection<IPayTransaction> Payments { get; }
+    IReadOnlyCollection<IPayment> Payments { get; }
     IReadOnlyCollection<IProjectScope> Projects { get; }
     IReadOnlyCollection<ISalesOrder> Orders { get; }
     IReadOnlyCollection<ITaskJob> Tasks { get; }
+
+    IReadOnlyCollection<ICustomerContactPhone> Phones { get; }
 
     DateTime BalancedAt { get; }
     decimal CumulativeBalance { get; set; }
