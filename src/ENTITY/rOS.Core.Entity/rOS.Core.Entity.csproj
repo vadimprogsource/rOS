@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\API\rOS.Core.Api\rOS.Core.Api.csproj" />
+    <ProjectReference Include="..\..\DATA\Oql.Api\Oql.Api.csproj" />
+  </ItemGroup>
+</Project>

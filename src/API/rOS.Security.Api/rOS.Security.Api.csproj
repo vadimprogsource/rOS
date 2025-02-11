@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Accounts\" />
+    <None Remove="Sessions\" />
+    <None Remove="Permissions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Accounts\" />
+    <Folder Include="Sessions\" />
+    <Folder Include="Permissions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\rOS.Core.Api\rOS.Core.Api.csproj" />
+  </ItemGroup>
+</Project>

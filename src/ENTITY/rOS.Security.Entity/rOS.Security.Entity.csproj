@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Permissions\" />
+    <None Remove="Accounts\" />
+    <None Remove="Sessions\" />
+    <None Remove="Tokens\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Permissions\" />
+    <Folder Include="Accounts\" />
+    <Folder Include="Sessions\" />
+    <Folder Include="Tokens\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\API\rOS.Security.Api\rOS.Security.Api.csproj" />
+    <ProjectReference Include="..\..\API\rOS.Core.Api\rOS.Core.Api.csproj" />
+    <ProjectReference Include="..\rOS.Core.Entity\rOS.Core.Entity.csproj" />
+    <ProjectReference Include="..\..\DATA\Oql.Api\Oql.Api.csproj" />
+  </ItemGroup>
+</Project>
