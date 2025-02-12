@@ -1,0 +1,7 @@
+﻿@rOS.Asset.Wapi_HostAddress = http://localhost:5044
+
+GET {{rOS.Asset.Wapi_HostAddress}}
+Accept: application/json
+
+###
+

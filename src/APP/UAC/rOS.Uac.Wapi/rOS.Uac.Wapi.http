@@ -1,0 +1,7 @@
+﻿@rOS.Uac.Wapi_HostAddress = http://localhost:5241
+
+GET {{rOS.Uac.Wapi_HostAddress}}/
+Accept: application/json
+
+###
+
