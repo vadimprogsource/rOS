@@ -4,9 +4,10 @@ namespace rOS.Security.Api.Accounts;
 
 public interface IUserAccount :IUserIdentity
 {
-
+    DateTime CreatedOn { get; }
     string? Cellular { get; }
     string? Email { get; }
+    string? Title { get; }
     IAccessRole Role { get; }
     IAccessRole[] GrandedAccessRoles { get; }
     bool Blocked { get; }

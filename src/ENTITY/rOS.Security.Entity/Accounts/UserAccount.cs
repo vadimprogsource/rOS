@@ -22,7 +22,7 @@ namespace rOS.Security.Entity.Accounts
 
         public UserAccessRole[] GrandedAccessRoles { get; set; } = Array.Empty<UserAccessRole>();
 
-       IAccessRole IUserAccount.Role=>GrandedAccessRoles.First();
+       
         
         public abstract bool Blocked { get; set; }
 

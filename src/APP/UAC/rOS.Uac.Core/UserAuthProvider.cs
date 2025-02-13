@@ -19,10 +19,10 @@ namespace rOS.Uac.Core
             return user.Blocked ? _storage.GetEmptyUser() : user;
         }
 
-        public async Task<IUserAccount> GetLoginAsync(string login, string password)
+        public async Task<IUserAccount> GetLoginAsync(IUserLogin login)
         {
-            UserPassword userPassword = new(login, password);
-            IUserAccount user =  await _storage.FindUserAsync(login, userPassword);
+            UserPassword userPassword = new(login);
+            IUserAccount user =  await _storage.FindUserAsync(userPassword);
             return user.Blocked ? _storage.GetEmptyUser() : user;
         }
     }

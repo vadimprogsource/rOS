@@ -8,6 +8,6 @@ namespace rOS.Security.Api.Providers;
 
 public interface IUserAuthProvider
 {
-    Task<IUserAccount> GetLoginAsync(string login, string password);
+    Task<IUserAccount> GetLoginAsync(IUserLogin login);
     Task<IUserAccount> GetActiveUserAsync (Guid userGuid);
 }

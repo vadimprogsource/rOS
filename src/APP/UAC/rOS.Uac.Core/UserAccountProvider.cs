@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Async;
 using rOS.Security.Api.Accounts;
 using rOS.Security.Api.Providers;
 using rOS.Security.Api.Storages;
@@ -15,12 +16,12 @@ public class UserProvider :  IUserAccountProvider
     public async Task<IUserAccount> FindUserAsync(string login, string password)
     {
         UserPassword   userPassword = new(login, password);
-        return await _storage.FindUserAsync(login, userPassword);     
+        return await _storage.FindUserAsync(userPassword);     
     }
 
     public async Task<IUserAccount[]> FindUsersAsync(string searchPattern, int maxCount)
     {
-        return (await _storage.FindUsersAsync(searchPattern, maxCount)).ToArray();
+        return await _storage.FindUsersAsync(searchPattern, maxCount).ToArrayAsync();
     }
 
     public async Task<IUserAccount> GetUserAsync(Guid guid)

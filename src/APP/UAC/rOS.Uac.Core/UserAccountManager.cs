@@ -15,12 +15,14 @@ public class UserAccountManager : IUserAccountManager
 
     private readonly IFactory<UserAccount> _factory;
     private readonly IUserAccountStorage   _storage;
+    private readonly IInstanceProvider<IUserAccount, UserAccount> _provider;
 
 
-    public UserAccountManager(IFactory<UserAccount> factory , IUserAccountStorage storage)
+    public UserAccountManager(IFactory<UserAccount> factory, IInstanceProvider<IUserAccount, UserAccount> provider , IUserAccountStorage storage)
     {
         _factory = factory;
         _storage = storage;
+        _provider = provider;
     }
 
 
@@ -52,45 +54,63 @@ public class UserAccountManager : IUserAccountManager
             {
                 return userAccount;
             }
-
-            return _storage.GetEmptyUser();
+            else
+            {
+                return _storage.GetEmptyUser();
+            }
         }
     }
 
 
-    public Task<IUserAccount> ChangeCellular(IUserAccount user, string email)
+    public async Task<IUserAccount> ChangeCellular(IUserAccount user, string cellular) => await ChangeUserProperty(user, x => x.Cellular = cellular);
+
+
+
+    private async Task<IUserAccount> ChangeUserProperty(IUserAccount user, Action<UserAccount> setter)
     {
-        throw new NotImplementedException();
+        UserAccount userAccount = _provider.GetInstance(user);
+        setter(userAccount);
+
+        if (await _storage.PatchUserAsync(userAccount))
+        {
+            return userAccount;
+        }
+
+        return _storage.GetEmptyUser();
     }
 
-    public Task<IUserAccount> ChangeEmail(IUserAccount user, string email)
+
+    public async Task<IUserAccount> ChangeEmailAsync(IUserAccount user, string email) => await ChangeUserProperty(user, x => x.Email = email);
+ 
+    public async Task<IUserAccount> ChangeLoginAsync(IUserAccount user, IUserLogin login)
     {
-        throw new NotImplementedException();
+        if (await _storage.PutPasswordAsync(user, new UserPassword(login)))
+        {
+            return user;
+        }
+
+        return _storage.GetEmptyUser();
     }
 
-    public Task<IUserAccount> ChangePasswordAsync(IUserAccount user, string password)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IUserAccount> DisableUserAccountAsync(IUserAccount user)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IUserAccount> EnableUserAccountAsync(IUserAccount user)
-    {
-        throw new NotImplementedException();
-    }
-
+    public async Task<IUserAccount> DisableUserAccountAsync(IUserAccount user) => await ChangeUserProperty(user, x => x.Blocked = true);
+    
+    public async Task<IUserAccount> EnableUserAccountAsync(IUserAccount user) => await ChangeUserProperty(user, x => x.Blocked = false);
+   
     public Task<IUserAccount> GrantUserRoleAsync(IUserAccount user, IAccessRole role)
     {
         throw new NotImplementedException();
     }
 
-    public Task<bool> RemoveUserAsync(IUserAccount user)
+    public async Task<bool> RemoveUserAsync(IUserAccount user)
     {
-        throw new NotImplementedException();
+
+        if (user.Blocked)
+        {
+            return await _storage.DeleteUserAsync(user);
+        }
+
+        await DisableUserAccountAsync(user);
+        return true;
     }
 
     public Task<IUserAccount> RevokeUserRoleAsync(IUserAccount user, IAccessRole role)

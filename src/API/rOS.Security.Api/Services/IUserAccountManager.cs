@@ -10,8 +10,8 @@ namespace rOS.Security.Api.Services;
 public interface IUserAccountManager 
 {
     Task<IUserAccount> CreateUserAsync(Guid? ownerGuid, string login,string password);
-    Task<IUserAccount> ChangePasswordAsync(IUserAccount user, string password);
-    Task<IUserAccount> ChangeEmail(IUserAccount user, string email);
+    Task<IUserAccount> ChangeLoginAsync(IUserAccount user, IUserLogin login);
+    Task<IUserAccount> ChangeEmailAsync(IUserAccount user, string email);
     Task<IUserAccount> ChangeCellular(IUserAccount user, string email);
     Task<IUserAccount> GrantUserRoleAsync(IUserAccount user, IAccessRole role);
     Task<IUserAccount> RevokeUserRoleAsync(IUserAccount user, IAccessRole role);
