@@ -27,7 +27,7 @@ namespace rOS.Security.Entity.Accounts
         public abstract bool Blocked { get; set; }
 
 
-        public bool IsValid => CreatedOn > DateTime.MinValue && Guid != Guid.Empty && !Blocked; 
+        public bool IsValid => CreatedOn > DateTime.MinValue && Guid != Guid.Empty;
 
         public abstract string? Cellular { get; set; }
 

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using rOS.Security.Api;
 using rOS.Security.Api.Accounts;
 using rOS.Security.Api.Providers;
@@ -10,18 +12,18 @@ namespace rOS.Uac.Wapi.Controllers;
 [ApiController]
 public class UserAuthController : ControllerBase
 {
-    private IUserAuthProvider m_provider;
+    private IUserAuthProvider _provider;
 
     public UserAuthController(IUserAuthProvider provider)
     {
-        m_provider = provider;
+        _provider = provider;
     }
 
 
     [HttpGet("userGuid")]
     public async Task<IActionResult> GetLoggerUser(Guid userGuid)
     {
-        IUserAccount logged = await m_provider.GetActiveUserAsync(userGuid);
+        IUserAccount logged = await _provider.GetActiveUserAsync(userGuid);
 
         if (logged == null)
         {
@@ -34,7 +36,7 @@ public class UserAuthController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Login([FromBody]UserLoginModel model)
     {
-        IUserAccount logged = await m_provider.GetLoginAsync(model);
+        IUserAccount logged = await _provider.GetLoginAsync(model);
 
         if (logged == null || !logged.IsValid)
         {

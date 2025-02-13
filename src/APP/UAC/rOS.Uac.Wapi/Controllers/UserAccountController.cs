@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using rOS.Security.Api;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using rOS.Security.Api.Accounts;
 using rOS.Security.Api.Permissions;
 using rOS.Security.Api.Services;
@@ -24,12 +25,13 @@ public class UserAccountController : ControllerBase
     {
         IUserAccount user = await _service.UserProvider.GetUserAsync(userGuid);
 
-        if (user == null)
+        if (user.IsValid)
         {
-            return NotFound();
+            return Ok(new { user.Guid, user.Login, user.Blocked, user.Cellular, user.Email });
         }
 
-        return Ok(new { user.Guid, user.Login, user.Blocked,user.Cellular ,user.Email});
+        return NotFound();
+
     }
 
 
@@ -52,7 +54,7 @@ public class UserAccountController : ControllerBase
 
         IUserAccount userAccount =  await _service.UserManager.CreateUserAsync(ownerGuid, model.Login ,model.Password);
 
-        if (userAccount == null || !userAccount.IsValid)
+        if (!userAccount.IsValid)
         {
             return BadRequest();
         }
@@ -91,7 +93,7 @@ public class UserAccountController : ControllerBase
         {
            IUserAccount userAccount = await  _service.UserProvider.GetUserAsync(userGuid);
 
-            if (userAccount == null)
+            if (!userAccount.IsValid)
             {
                 return NotFound();
             }
@@ -116,7 +118,7 @@ public class UserAccountController : ControllerBase
     {
         IUserAccount userAccount = await _service.UserProvider.GetUserAsync(userGuid);
 
-        if (userAccount == null)
+        if (!userAccount.IsValid)
         {
             return NotFound();
         }
@@ -132,7 +134,7 @@ public class UserAccountController : ControllerBase
     {
         IUserAccount userAccount = await _service.UserProvider.GetUserAsync(userGuid);
 
-        if (userAccount == null)
+        if (!userAccount.IsValid)
         {
             return NotFound();
         }
@@ -218,7 +220,7 @@ public class UserAccountController : ControllerBase
     {
         IUserAccount userAccount = await _service.UserProvider.GetUserAsync(userGuid);
 
-        if (userAccount == null)
+        if (!userAccount.IsValid)
         {
             return NotFound();
         }

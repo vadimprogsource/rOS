@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CoreLib.Builders;
 using System.CoreLib.Lockers;
+using System.Threading.Tasks;
 using Oql.Api.Runtime;
 using rOS.Security.Api.Accounts;
 using rOS.Security.Api.Permissions;
@@ -50,14 +51,9 @@ public class UserAccountManager : IUserAccountManager
             userAccount.OwnerGuid = ownerGuid;
             userAccount.CreatedOn = DateTime.Now;
 
-            if (await _storage.PutUserAsync(userAccount))
-            {
-                return userAccount;
-            }
-            else
-            {
-                return _storage.GetEmptyUser();
-            }
+            await _storage.PutUserAsync(userAccount);
+            return userAccount;
+            
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using rOS.Security.Api.Permissions;
+﻿using System;
+using rOS.Security.Api.Permissions;
 
 namespace rOS.Security.Api.Accounts;
 

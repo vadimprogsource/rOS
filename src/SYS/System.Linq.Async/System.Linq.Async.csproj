@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Emit\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Emit\" />
+  </ItemGroup>
 </Project>
