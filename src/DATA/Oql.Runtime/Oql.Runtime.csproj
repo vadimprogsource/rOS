@@ -7,11 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Emit\" />
-    <None Remove="Reflection\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Emit\" />
-    <Folder Include="Reflection\" />
+    <ProjectReference Include="..\..\SYS\System.Linq.Async\System.Linq.Async.csproj" />
+    <ProjectReference Include="..\Oql.Api\Oql.Api.csproj" />
   </ItemGroup>
 </Project>

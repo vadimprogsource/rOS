@@ -1,0 +1,7 @@
+﻿@rOS.Budget.Wapi_HostAddress = http://localhost:5136
+
+GET {{rOS.Budget.Wapi_HostAddress}}
+Accept: application/json
+
+###
+
