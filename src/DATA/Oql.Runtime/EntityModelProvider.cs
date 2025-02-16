@@ -1,96 +1,92 @@
 ﻿using System;
-using System.Linq.Async.Emit;
-using System.Linq.Async.Reflection;
+using System.Linq.Async;
 using System.Reflection;
 using Oql.Api.Runtime;
 
 namespace Oql.Runtime;
 
-
-
-public class EntityModelProvider
+public class EntityModelProvider<TEntity,TModel> : EntityModelBuilder,IEntityModelProvider<TEntity>  , IEntityModelProvider<TEntity,TModel>
 {
-    public static string? ConvertToString<T>(T obj) => obj == null ? string.Empty : obj.ToString();
+    private readonly Func<TEntity, TModel>   _to_model;
+    private readonly Action<TModel, TEntity> _from_model;
+    private readonly Func<TModel, Guid>      _primary_key;
 
-    public static TResult? ConvertTo<TSource, TResult>(TSource obj)
+
+    public EntityModelProvider(IEnumerable<IEntityModelProperty>? properties = null)
     {
-        if (obj == null) return default;
 
-        Type? resultType = Nullable.GetUnderlyingType(typeof(TResult));
-
-        resultType ??= typeof(TResult);
-        
-        if (resultType.IsEnum)
+        if (properties == null || !properties.Any())
         {
-            resultType = Enum.GetUnderlyingType(resultType);
+            properties = Generate<TEntity, TModel>();
         }
 
-        return (TResult)Convert.ChangeType(obj, resultType);
-    }
+        _to_model    = MakeConvertToModel<TEntity, TModel>(properties.Where(x=>x.Model.CanWrite && x.Entity.CanRead));
+        _from_model  = MakeConvertFromModel<TModel, TEntity>(properties.Where(x =>x.Model.CanRead && x.Entity.CanWrite && !x.IsIdentity));
 
-    public static bool IsValid<T>(T value) => value != null;
+        IEntityModelProperty? identity = properties.FirstOrDefault(x => x.IsIdentity);
 
-    internal static IMethod s_convert_to_string = new Method<EntityModelProvider>(x => ConvertToString(1));
-    internal static IMethod s_convert_to        = new Method<EntityModelProvider>(x => ConvertTo<int, string>(int.MinValue));
-    internal static IMethod s_is_valid          = new Method<EntityModelProvider>(x => IsValid(int.MinValue));
-
-
-
-
-
-    internal static ICodeBuilder EmitCallConvert(ICodeBuilder codeBuilder, Type sourceType, Type targetType)
-    {
-        if (sourceType == targetType)
+        if (identity != null)
         {
-            return codeBuilder;
+            _primary_key = MakeGetPrimaryKey<TModel, Guid>(identity);
+            return;
         }
 
-        if (targetType == typeof(string))
-        {
-            return codeBuilder.Call(s_convert_to_string,targetType);
-        }
 
-        return codeBuilder.Call(s_convert_to,sourceType, targetType);
+        _primary_key = x => Guid.Empty;
+
     }
 
 
-    internal static Func<TEntity, TModel> MakeConvertToModel<TEntity, TModel>(IEnumerable<IEntityModelProperty> properties)
-    {
-        MethodCodeBuilder<TEntity, TModel> codeBuilder = new(typeof(EntityModelProvider));
-        codeBuilder.NewObject<TModel>();
 
-        foreach (IEntityModelProperty prop in properties)
+    public Guid GetPrimaryKey(TModel model) => _primary_key(model);
+    
+
+    public TEntity FromModel(TModel model, TEntity entity)
+    {
+        _from_model(model, entity);
+        return entity;
+    }
+
+    public TModel ToModel(TEntity entity) => _to_model(entity);
+
+    public IEnumerable<TModel> ToModel(IEnumerable<TEntity> entity) => entity.Select(x => _to_model(x));
+ 
+
+    public IAsyncEnumerable<TModel> ToModelAsync(IAsyncEnumerable<TEntity> entity) => entity.Select(x => _to_model(x));
+
+
+    private readonly struct model_change_set : IChangeContext<TEntity>
+    {
+        private readonly TModel _model;
+        private readonly Func<TModel, Guid> _getter;
+        private readonly Action<TModel, TEntity> _setter;
+
+        public model_change_set(TModel model, Func<TModel, Guid> getter, Action<TModel, TEntity> setter)
         {
-            EmitCallConvert(codeBuilder.This().Argument().GetValue(prop.Entity), prop.Entity.PropertyType, prop.Model.PropertyType).SetValue(prop.Model);
+            _model = model;
+            _getter = getter;
+            _setter = setter;
         }
 
-        return codeBuilder.BuildFunc();
-    }
+        public Guid PrimaryKey => _getter(_model);
 
-
-    internal static Func<TModel, TPrimaryKey> MakeGetPrimaryKey<TModel, TPrimaryKey>(IEntityModelProperty primaryKey)
-    {
-
-        MethodCodeBuilder<TModel, TPrimaryKey> codeBuilder = new(typeof(EntityModelProvider));
-        EmitCallConvert(codeBuilder.Argument().GetValue(primaryKey.Model), primaryKey.Model.PropertyType, typeof(TPrimaryKey));
-        return codeBuilder.BuildFunc();
-    }
-
-
-    internal static Action<TModel, TEntity> MakeConvertFromModel<TModel, TEntity>(IEnumerable<IEntityModelProperty> properties)
-    {
-        MethodCodeBuilder codeBuilder = new(typeof(EntityModelProvider), typeof(void), typeof(TModel), typeof(TEntity));
-
-        foreach (IEntityModelProperty prop in properties)
+        public TEntity Change(TEntity entity)
         {
-            using (codeBuilder.If(x => x.Argument().GetValue(prop.Model).Call(s_is_valid,prop.Model.PropertyType)))
-            {
-                EmitCallConvert(codeBuilder.ArgumentSecond().Argument().GetValue(prop.Model), prop.Model.PropertyType, prop.Entity.PropertyType).SetValue(prop.Entity);
-            }
+            _setter(_model, entity);
+            return entity;
         }
-
-        return codeBuilder.BuildDelegate<Action<TModel, TEntity>>();
     }
 
+
+    public IChangeContext<TEntity> GetChangeSet(TModel model) => new model_change_set(model, _primary_key, _from_model);
+
+    object IEntityModelProvider<TEntity>.ToModel(TEntity entity) => _to_model(entity) ?? throw new NullReferenceException() ;
+
+    IEnumerable<object> IEntityModelProvider<TEntity>.ToModel(IEnumerable<TEntity> entity) => ToModel(entity).OfType<object>();
+
+    IAsyncEnumerable<object> IEntityModelProvider<TEntity>.ToModelAsync(IAsyncEnumerable<TEntity> entity) => ToModelAsync(entity).OfType<TModel,object>();
+
+    IChangeContext<TEntity> IEntityModelProvider<TEntity>.GetChangeSet(object model) => GetChangeSet((TModel)model);
+    
 }
 

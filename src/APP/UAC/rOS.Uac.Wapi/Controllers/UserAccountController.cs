@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Oql.Api.Runtime;
 using rOS.Security.Api.Accounts;
 using rOS.Security.Api.Permissions;
 using rOS.Security.Api.Services;
+using rOS.Security.Entity.Accounts;
 using rOS.Uac.Wapi.Models;
 
 namespace rOS.Uac.Wapi.Controllers;
@@ -13,11 +15,13 @@ namespace rOS.Uac.Wapi.Controllers;
 public class UserAccountController : ControllerBase
 {
     private readonly IUserAccountService _service;
+    private readonly IEntityModelProvider<IUserAccount, UserAccountModel> _provider;
 
 
-    public UserAccountController(IUserAccountService userAccountService)
+    public UserAccountController(IUserAccountService userAccountService, IEntityModelProvider<IUserAccount, UserAccountModel> provider)
     {
         _service = userAccountService;
+        _provider = provider;
     }
 
     [HttpGet("{userGuid}")]
@@ -27,7 +31,7 @@ public class UserAccountController : ControllerBase
 
         if (user.IsValid)
         {
-            return Ok(new { user.Guid, user.Login, user.Blocked, user.Cellular, user.Email });
+            return Ok(_provider.ToModel(user));
         }
 
         return NotFound();
@@ -71,7 +75,7 @@ public class UserAccountController : ControllerBase
         }
 
         
-        return Ok(new {userAccount.Guid , userAccount.Login });
+        return Ok(_provider.ToModel(userAccount));
     }
 
     [HttpPut("register")]

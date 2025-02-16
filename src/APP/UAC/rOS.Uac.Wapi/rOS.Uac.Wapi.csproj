@@ -27,5 +27,8 @@
     <ProjectReference Include="..\..\..\API\rOS.Security.Api\rOS.Security.Api.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\DATA\Oql.Runtime\Oql.Runtime.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
 </Project>

@@ -9,6 +9,7 @@ namespace System.Linq.Async
 
         public static IAsyncEnumerable<TResult> Select<TSource,TResult>(this IAsyncEnumerable<TSource> @this, Func<TSource, TResult> selector) => new Select<TSource,TResult>(@this, selector);
 
+        public static IAsyncEnumerable<TResult> OfType<TSource, TResult>(this IAsyncEnumerable<TSource> @this) => new OfType<TSource,TResult>(@this);
 
         public static IAsyncEnumerable<T> Where<T>(this IAsyncEnumerable<T> @this, Func<T, bool> predicate)=>new Where<T>(@this,predicate);
 
