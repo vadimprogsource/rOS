@@ -9,18 +9,18 @@ namespace Wasm.Kernel.Providers;
 
 public class MetaDataProvider : IMetaDataProvider
 {
-    private readonly Dictionary<string, string> m_message = new();
+    private readonly Dictionary<string, string> _message = new();
 
 
     public IMetaDataProvider AddMessage(string code, string body)
     {
-        m_message.Add(code, body);
+        _message.Add(code, body);
         return this;
     }
 
     public string GetMessage(string code)
     {
-        if (m_message.TryGetValue(code, out string? message))
+        if (_message.TryGetValue(code, out string? message))
         {
             return message ?? code;
         }

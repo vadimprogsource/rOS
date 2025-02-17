@@ -1,0 +1,7 @@
+﻿@rOS.Erm.Wapi_HostAddress = http://localhost:5082
+
+GET {{rOS.Erm.Wapi_HostAddress}}/
+Accept: application/json
+
+###
+

@@ -8,7 +8,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\SYS\System.Linq.Async\System.Linq.Async.csproj" />
-    <ProjectReference Include="..\Oql.Api\Oql.Api.csproj" />
-    <ProjectReference Include="..\Oql.CodeGen\Oql.CodeGen.csproj" />
   </ItemGroup>
 </Project>

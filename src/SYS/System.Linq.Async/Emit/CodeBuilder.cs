@@ -167,7 +167,7 @@ public class CodeBuilder : ICodeBuilder
     public ICodeBuilder ReadField(FieldInfo field, MethodInfo read) => Argument().ArgumentSecond().Call(read).SetValue(field);
     public ICodeBuilder ReadProperty(PropertyInfo prop, MethodInfo read) => Argument().ArgumentSecond().Call(read).SetValue(prop);
 
-    public ICodeBuilder Build()
+    public virtual ICodeBuilder Build()
     {
         generator.Emit(OpCodes.Ret);
         return this;

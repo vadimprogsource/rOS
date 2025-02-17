@@ -13,16 +13,16 @@ namespace Wasm.Kernel.Builders;
 public class HtmlBuilder
 {
 
-    private readonly RenderTreeBuilder m_tree_builder;
-    private readonly object m_root_element;
-    private int m_seq_counter;
+    private readonly RenderTreeBuilder _tree_builder;
+    private readonly object _root_element;
+    private int _seq_counter;
 
 
     public HtmlBuilder(object @this, RenderTreeBuilder treeBuilder)
     {
-        m_tree_builder = treeBuilder;
-        m_seq_counter = 0;
-        m_root_element = @this;
+        _tree_builder = treeBuilder;
+        _seq_counter = 0;
+        _root_element = @this;
         Attributes = new ElementAttributes(this);
     }
 
@@ -30,12 +30,12 @@ public class HtmlBuilder
 
     protected void OpenTag(string tagName)
     {
-        m_tree_builder.OpenElement(m_seq_counter++, tagName);
+        _tree_builder.OpenElement(_seq_counter++, tagName);
     }
 
     protected void CloseTag()
     {
-        m_tree_builder.CloseElement();
+        _tree_builder.CloseElement();
     }
 
     private class ElementTag : IDisposable
@@ -83,31 +83,31 @@ public class HtmlBuilder
 
     private void AddMultipleAttributes(IEnumerable<KeyValuePair<string, object>>? value)
     {
-        m_tree_builder.AddMultipleAttributes(m_seq_counter++, value);
+        _tree_builder.AddMultipleAttributes(_seq_counter++, value);
     }
 
     private void AddAttibutes(string name, string? value)
     {
-        m_tree_builder.AddAttribute(m_seq_counter++, name, value);
+        _tree_builder.AddAttribute(_seq_counter++, name, value);
     }
 
 
     public void AddAttribute<TArgument>(string name, Action<TArgument> callBack)
     {
-        m_tree_builder.AddAttribute(m_seq_counter++, name, EventCallback.Factory.Create(m_root_element, callBack));
+        _tree_builder.AddAttribute(_seq_counter++, name, EventCallback.Factory.Create(_root_element, callBack));
     }
 
     public void AddEvent(string eventName, Func<Task> eventCallBack , bool stopPropogation,bool preventDefault)
     {
-        m_tree_builder.AddAttribute(m_seq_counter++, eventName, eventCallBack);
-        m_tree_builder.AddEventStopPropagationAttribute (m_seq_counter++, eventName, stopPropogation);
-        m_tree_builder.AddEventPreventDefaultAttribute  (m_seq_counter++ , eventName, preventDefault );
+        _tree_builder.AddAttribute(_seq_counter++, eventName, eventCallBack);
+        _tree_builder.AddEventStopPropagationAttribute (_seq_counter++, eventName, stopPropogation);
+        _tree_builder.AddEventPreventDefaultAttribute  (_seq_counter++ , eventName, preventDefault );
     }
 
 
     public void AddChangeEvent(string name, EventCallback<ChangeEventArgs> callback)
     {
-        m_tree_builder.AddAttribute(m_seq_counter++, name, callback);
+        _tree_builder.AddAttribute(_seq_counter++, name, callback);
     }
 
 
@@ -120,11 +120,11 @@ public class HtmlBuilder
         }
     }
 
-    public string? InnerHtml { set => m_tree_builder.AddMarkupContent(m_seq_counter++, value); }
-    public string? InnerText { set => m_tree_builder.AddContent(m_seq_counter++, value); }
-    public RenderFragment? Content { set => m_tree_builder.AddContent(m_seq_counter++, value); }
+    public string? InnerHtml { set => _tree_builder.AddMarkupContent(_seq_counter++, value); }
+    public string? InnerText { set => _tree_builder.AddContent(_seq_counter++, value); }
+    public RenderFragment? Content { set => _tree_builder.AddContent(_seq_counter++, value); }
     public ElementAttributes Attributes { get; private set; }
-    public Action<ElementReference> Reference { set => m_tree_builder.AddElementReferenceCapture(m_seq_counter++, value); }
+    public Action<ElementReference> Reference { set => _tree_builder.AddElementReferenceCapture(_seq_counter++, value); }
 
 
 }

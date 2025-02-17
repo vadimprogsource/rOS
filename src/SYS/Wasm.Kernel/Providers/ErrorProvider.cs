@@ -11,11 +11,11 @@ namespace Wasm.Kernel.Providers;
 public class ErrorProvider : IErrorProvider
 {
 
-    private readonly IMetaDataProvider m_meta_data;
+    private readonly IMetaDataProvider _meta_data;
 
     public ErrorProvider(IMetaDataProvider metaData)
     {
-        m_meta_data = metaData;
+        _meta_data = metaData;
     }
 
     private Dictionary<string, IError[]> m_err_set = new();
@@ -49,7 +49,7 @@ public class ErrorProvider : IErrorProvider
 
             if (x.ErrorCode != null)
             {
-                model.Message = m_meta_data.GetMessage(x.ErrorCode);
+                model.Message = _meta_data.GetMessage(x.ErrorCode);
             }
 
             return model;

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq.Async.Emit;
 using System.Linq.Async.Reflection;
+using System.Linq.Expressions;
 using System.Reflection;
+using System.Security.Principal;
 using Oql.Api.Attributes;
 using Oql.Api.Runtime;
+using Oql.CodeGen;
 
 namespace Oql.Runtime;
 
@@ -162,5 +165,81 @@ public class EntityModelBuilder
 
     }
 
+}
+
+
+internal  class EntityModelProperty : IEntityModelProperty
+{
+    public required int Index { get; internal set; }
+
+    public bool IsIdentity { get; internal set; } = false;
+
+    public required PropertyInfo Model { get; internal set; }
+
+    public required PropertyInfo Entity { get; internal set; }
+
+    public override string ToString() => Entity.Name;
+    
+}
+
+
+public class EntityModelBuilder<TEntity> : IEntityModelBuilder<TEntity> , IEntityModelBuilder
+{
+    private readonly Dictionary<string, EntityModelProperty> _props = new();
+
+    protected virtual Type CreateModelType(IEnumerable<PropertyInfo> properties)
+    {
+        CodeTypeBuilder builder = new(typeof(TEntity).Name);
+        foreach (PropertyInfo info in properties)
+        {
+            builder.AutoProperty(info.Name, info.PropertyType);
+        }
+
+        return builder.Buid();
+    }
+
+
+    public IEntityModelProvider<TEntity> Build()
+    {
+        Type modelType = CreateModelType(_props.Values.OrderBy(x => x.Index).Select(x=>x.Model));
+
+        foreach (PropertyInfo info in modelType.GetProperties())
+        {
+            if (_props.TryGetValue(info.Name, out EntityModelProperty? prop) && prop != null)
+            {
+                prop.Model = info;
+            }
+        }
+
+
+        if (Activator.CreateInstance(typeof(EntityModelProvider<,>).MakeGenericType(typeof(TEntity), modelType), _props.Values.OrderBy(x => x.Index)) is IEntityModelProvider<TEntity> provider)
+        {
+            return provider;
+        }
+
+        throw new NotSupportedException();
+    }
+
+
+    public IEntityModelBuilder Use(PropertyInfo property, bool isIdentity)
+    {
+        _props[property.Name] = new EntityModelProperty { Index = _props.Count, IsIdentity = isIdentity, Entity = property, Model = property };
+        return this;
+    }
+
+    public IEntityModelBuilder<TEntity> Use<TResult>(Expression<Func<TEntity, TResult>> property, bool isIdentity = false)
+    {
+        if (property.Body is MemberExpression member && member.Member.MemberType == MemberTypes.Property && member.Member is PropertyInfo prop)
+        {
+            Use(prop,isIdentity);
+        }
+
+        return this;
+    }
+
+
+
+    object IEntityModelBuilder.Build() => Build();
+    
 }
 

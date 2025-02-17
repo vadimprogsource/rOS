@@ -11,17 +11,17 @@ namespace Wasm.Kernel.Storages;
 public class LocalStorage : ILocalStorage
 {
 
-    private readonly IJSRuntime m_java_script;
+    private readonly IJSRuntime _java_script;
 
     public LocalStorage(IJSRuntime js)
     {
-        m_java_script = js;
+        _java_script = js;
     }
 
 
     public async Task<string?> GetAsync(string name)
     {
-        return await m_java_script.InvokeAsync<string>("localStorage.getItem", name);
+        return await _java_script.InvokeAsync<string>("localStorage.getItem", name);
     }
 
     public async Task PutAsync(string name, string? value)
@@ -32,12 +32,12 @@ public class LocalStorage : ILocalStorage
             await DeleteAsync(name);
         }
 
-        await m_java_script.InvokeVoidAsync("localStorage.setItem",name, value);
+        await _java_script.InvokeVoidAsync("localStorage.setItem",name, value);
     }
 
     public async Task DeleteAsync(string name)
     {
-        await m_java_script.InvokeVoidAsync("localStorage.removeItem", name);
+        await _java_script.InvokeVoidAsync("localStorage.removeItem", name);
     }
 
 }

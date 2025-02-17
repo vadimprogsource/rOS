@@ -15,10 +15,10 @@ namespace rOS.Uac.Wapi.Controllers;
 public class UserAccountController : ControllerBase
 {
     private readonly IUserAccountService _service;
-    private readonly IEntityModelProvider<IUserAccount, UserAccountModel> _provider;
+    private readonly IEntityModelProvider<IUserAccount> _provider;
 
 
-    public UserAccountController(IUserAccountService userAccountService, IEntityModelProvider<IUserAccount, UserAccountModel> provider)
+    public UserAccountController(IUserAccountService userAccountService, IEntityModelProvider<IUserAccount> provider)
     {
         _service = userAccountService;
         _provider = provider;

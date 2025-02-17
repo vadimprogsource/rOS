@@ -19,21 +19,21 @@ namespace Wasm.Kernel.Controllers;
 
 public class WebFrontController : IFrontController,IRouterContext
 {
-    private readonly HttpClient         m_http_client;
-    private readonly NavigationManager  m_router_context;
-    private readonly IRouter            m_router;
-    private readonly IAuthorizeProvider m_auth_provider;
-    private readonly IErrorProvider     m_error_provider;
+    private readonly HttpClient         _http_client;
+    private readonly NavigationManager  _router_context;
+    private readonly IRouter            _router;
+    private readonly IAuthorizeProvider _auth_provider;
+    private readonly IErrorProvider     _error_provider;
 
-    public string Page => new Uri(m_router_context.Uri).PathAndQuery;
+    public string Page => new Uri(_router_context.Uri).PathAndQuery;
 
     public WebFrontController(HttpClient httpClient,  NavigationManager navigation,IRouter router , IAuthorizeProvider auth , IErrorProvider errorProvider)
     {
-        m_http_client = httpClient;
-        m_router_context = navigation;
-        m_router = router;
-        m_auth_provider = auth;
-        m_error_provider = errorProvider;
+        _http_client = httpClient;
+        _router_context = navigation;
+        _router = router;
+        _auth_provider = auth;
+        _error_provider = errorProvider;
     }
 
 
@@ -161,7 +161,7 @@ public class WebFrontController : IFrontController,IRouterContext
 
     protected async Task<IExecuteActionResult> ExecuteRequestAsync(IAction action)
     {
-        return await ExecuteRequestAsync(new HttpMethod(action.Method??"get"), m_router.MakePath(action.Action , action.Guid), action.Model);
+        return await ExecuteRequestAsync(new HttpMethod(action.Method??"get"), _router.MakePath(action.Action , action.Guid), action.Model);
     }
 
 
@@ -187,15 +187,15 @@ public class WebFrontController : IFrontController,IRouterContext
             HttpRequestMessage request = new(method, path);
 
 
-            IAuthorizeToken token = await m_auth_provider.GetTokenAsync();
+            IAuthorizeToken token = await _auth_provider.GetTokenAsync();
 
             if (token.IsAuthorized)
             {
-                m_http_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.Token ?? string.Empty);
+                _http_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(token.Token ?? string.Empty);
             }
             else
             {
-                m_http_client.DefaultRequestHeaders.Authorization = null;
+                _http_client.DefaultRequestHeaders.Authorization = null;
             }
 
 
@@ -204,32 +204,32 @@ public class WebFrontController : IFrontController,IRouterContext
                 request.Content = JsonContent.Create(model);
             }
 
-            m_error_provider.Success();
+            _error_provider.Success();
 
-            ExecuteActionResult actionResult = new(await m_http_client.SendAsync(request));
+            ExecuteActionResult actionResult = new(await _http_client.SendAsync(request));
 
 
             if (actionResult.IsError)
             {
-                await m_error_provider.ThrowErrorsAsync(actionResult);
+                await _error_provider.ThrowErrorsAsync(actionResult);
             }
 
             if (actionResult.IsAuth)
             {
-                await m_auth_provider.SignInAsync(actionResult);
+                await _auth_provider.SignInAsync(actionResult);
 
             }
             else
             {
-                await m_auth_provider.SignOutAsync();
+                await _auth_provider.SignOutAsync();
             }
 
             return actionResult;
         }
         catch (Exception err)
         {
-            m_error_provider.ThrowException(err);
-            await m_auth_provider.SignOutAsync();
+            _error_provider.ThrowException(err);
+            await _auth_provider.SignOutAsync();
             return new ExecuteActionResult(err);
         }
 
@@ -240,14 +240,14 @@ public class WebFrontController : IFrontController,IRouterContext
     {
 
 
-        TModel? model = m_router.Pop<TModel>();
+        TModel? model = _router.Pop<TModel>();
 
         if (model == null)
         {
 
             if (action == null || string.IsNullOrWhiteSpace(action.Action))
             {
-                action = m_router.GetCurrentAction(this);
+                action = _router.GetCurrentAction(this);
             }
 
 
@@ -270,7 +270,7 @@ public class WebFrontController : IFrontController,IRouterContext
     public async Task<IExecuteActionResult> ExecuteActionAsync(IAction? action)
     {
 
-        action = m_router.GetSafeAction(action);
+        action = _router.GetSafeAction(action);
 
         if (action == null)
         {
@@ -282,7 +282,7 @@ public class WebFrontController : IFrontController,IRouterContext
 
         if (actionResult.IsSuccess)
         {
-            await m_router.RouteAsync(this, action.Route ?? actionResult.RoutePath ?? "/", action.Guid, actionResult.Content);
+            await _router.RouteAsync(this, action.Route ?? actionResult.RoutePath ?? "/", action.Guid, actionResult.Content);
         }
         
 
@@ -292,20 +292,20 @@ public class WebFrontController : IFrontController,IRouterContext
 
     public void ExecuteRoute(IAction action)
     {
-        m_router_context.NavigateTo(m_router.MakePath( action.Route ?? "/" , action.Guid));
+        _router_context.NavigateTo(_router.MakePath( action.Route ?? "/" , action.Guid));
     }
 
     public async Task<TModel?> FetchModelAsync<TModel>(IAction? action, string relativePath, object? model = null)
     {
 
-        action = m_router.GetSafeAction(action);
+        action = _router.GetSafeAction(action);
 
         if (action == null)
         {
             return default;
         }
 
-        IExecuteActionResult actionResult = await ExecuteRequestAsync(new HttpMethod(action.Method ?? "get"), m_router.MakePath(action.Action, relativePath), model);
+        IExecuteActionResult actionResult = await ExecuteRequestAsync(new HttpMethod(action.Method ?? "get"), _router.MakePath(action.Action, relativePath), model);
 
         if (actionResult.IsSuccess && actionResult.Content != null)
         {

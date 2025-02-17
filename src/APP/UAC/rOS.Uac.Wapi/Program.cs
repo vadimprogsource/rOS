@@ -14,7 +14,16 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddUserAccountService();
 builder.Services.AddUserAccountStorageInMemory();
 
-builder.Services.AddSingleton<IEntityModelProvider<IUserAccount, UserAccountModel>, EntityModelProvider<IUserAccount, UserAccountModel>>();
+
+
+IEntityModelBuilder<IUserAccount> modelBuilder = new EntityModelBuilder<IUserAccount>()
+                                              .Use(x => x.Guid)
+                                              .Use(x => x.Login)
+                                              .Use(x => x.Cellular)
+                                              .Use(x => x.Email)
+                                              .Use(x => x.Title);
+
+builder.Services.AddSingleton(modelBuilder.Build());
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
