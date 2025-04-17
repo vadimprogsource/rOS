@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Wallet\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Wallet\" />
+  </ItemGroup>
 </Project>
