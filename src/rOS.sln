@@ -39,7 +39,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rOS.Security.Entity", "ENTI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rOS.Core.Entity", "ENTITY\rOS.Core.Entity\rOS.Core.Entity.csproj", "{6F860030-71CC-4FCF-A617-457C68AC9732}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oql.Api", "DATA\Oql.Api\Oql.Api.csproj", "{A8EF6479-094D-476B-908B-5938BB18E3B5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oql.Api", "OQL\Oql.Api\Oql.Api.csproj", "{A8EF6479-094D-476B-908B-5938BB18E3B5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rOS.Sts.InMemory", "APP\STS\rOS.Sts.InMemory\rOS.Sts.InMemory.csproj", "{AEC74EF3-572E-4CC5-896A-8BCA70F9450E}"
 EndProject
@@ -61,9 +61,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Linq.Async", "SYS\Sy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rOS.Budget.Wapi", "APP\rOS.Budget.Wapi\rOS.Budget.Wapi.csproj", "{5F4BF6FA-0046-443E-8B2B-AC04B6C80E49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oql.Runtime", "DATA\Oql.Runtime\Oql.Runtime.csproj", "{A8FB393B-11AA-436B-AEE9-63877D7B7B01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oql.Runtime", "OQL\Oql.Runtime\Oql.Runtime.csproj", "{A8FB393B-11AA-436B-AEE9-63877D7B7B01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oql.CodeGen", "DATA\Oql.CodeGen\Oql.CodeGen.csproj", "{D7ABC424-923E-4F81-9C3B-3E2C50F55BDC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oql.CodeGen", "OQL\Oql.CodeGen\Oql.CodeGen.csproj", "{D7ABC424-923E-4F81-9C3B-3E2C50F55BDC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rOS.Erm.Wapi", "APP\ERM\rOS.Erm.Wapi\rOS.Erm.Wapi.csproj", "{80ADAE1B-106A-45B2-A26D-82BFF969475D}"
 EndProject

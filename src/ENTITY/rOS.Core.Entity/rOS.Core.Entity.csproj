@@ -8,6 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\API\rOS.Core.Api\rOS.Core.Api.csproj" />
-    <ProjectReference Include="..\..\DATA\Oql.Api\Oql.Api.csproj" />
+    <ProjectReference Include="..\..\OQL\Oql.Api\Oql.Api.csproj" />
   </ItemGroup>
 </Project>
