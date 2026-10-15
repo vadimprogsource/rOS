@@ -6,7 +6,5 @@ namespace rOS.eCommerce.Api.Ordering;
 public interface ISalesOrder : IOrderHeader , IEntity
 {
  
-    IBusinessEntity Vendor { get; }
-    IBusinessEntity Customer { get; }
-    IOrderItem[] Items { get; }
+   
 }

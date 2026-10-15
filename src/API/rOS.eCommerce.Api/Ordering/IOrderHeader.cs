@@ -11,4 +11,7 @@ public interface IOrderHeader :IEntity , IDocument
     ICurrency Currency { get; }
     decimal TotalDue { get; }
     decimal SubTotal { get; }
+    
+    
+    
 }

@@ -10,6 +10,8 @@ public interface IProduct : IEntity , INamed , IMetaPromotion
 
     bool Visible { get; }
 
+    
+    string VendorCode { get; set; }
     string ProductCode { get; }
 
     ICurrency Currency { get; }
